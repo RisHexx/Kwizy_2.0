@@ -1,0 +1,155 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // App background
+        background: "#FFFFFF",
+        ink: "#1B1A17",
+        paper: "#FFFFFF",
+        // Primary brand colors - refined emerald palette
+        primary: {
+          50: "#F0FBFF",
+          100: "#DBF4FF",
+          200: "#BDEAFF",
+          300: "#96DCFF",
+          400: "#6BCBFF",
+          500: "#4DBBFF",
+          600: "#3C95D1",
+          700: "#2F73A3",
+          800: "#215475",
+          900: "#16364A",
+          DEFAULT: "#4DBBFF",
+        },
+        // Neutral grays with slight warmth
+        slate: {
+          50: "#F8FAFC",
+          100: "#F1F5F9",
+          200: "#E2E8F0",
+          300: "#CBD5E1",
+          400: "#94A3B8",
+          500: "#64748B",
+          600: "#475569",
+          700: "#334155",
+          800: "#1E293B",
+          900: "#0F172A",
+          950: "#020617",
+        },
+        // Status colors - complete palettes
+        success: {
+          50: "#F0FFFA",
+          100: "#DFFEF4",
+          200: "#B8FFE8",
+          300: "#8FFFD8",
+          400: "#6BFFC5",
+          500: "#6BFFB5",
+          600: "#48D992",
+          700: "#35A96F",
+          800: "#24754F",
+          900: "#195235",
+        },
+        error: {
+          50: "#FFF1F1",
+          100: "#FFDCDC",
+          200: "#FFBFBF",
+          300: "#FF9B9B",
+          400: "#FF7A7A",
+          500: "#FF5C5C",
+          600: "#E34646",
+          700: "#B93838",
+          800: "#8C2B2B",
+          900: "#632020",
+        },
+        warning: {
+          50: "#FFFCEB",
+          100: "#FFF3C4",
+          200: "#FFE48A",
+          300: "#FFD93D",
+          400: "#FFCC1F",
+          500: "#F5B700",
+          600: "#D39200",
+          700: "#A86F00",
+          800: "#7A4F00",
+          900: "#4F3300",
+        },
+        info: {
+          50: "#F4F8FF",
+          100: "#E6EEFF",
+          200: "#C9DAFF",
+          300: "#A6C2FF",
+          400: "#7FA2FF",
+          500: "#5C82FF",
+          600: "#4563D6",
+          700: "#364CA8",
+          800: "#28367A",
+          900: "#1B234D",
+        },
+      },
+      fontFamily: {
+        sans: ['"Pixelify Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['"Pixelify Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+      },
+      boxShadow: {
+        'soft': 'none',
+        'soft-lg': 'none',
+        'soft-xl': 'none',
+        'inner-soft': 'none',
+        'glow': 'none',
+        'glow-lg': 'none',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-subtle': 'linear-gradient(135deg, var(--tw-gradient-stops))',
+        'hero-pattern': 'radial-gradient(circle at 1px 1px, rgba(77, 187, 255, 0.2) 1px, transparent 0)',
+        'pixel-grid': 'linear-gradient(rgba(27, 26, 23, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(27, 26, 23, 0.08) 1px, transparent 1px)',
+        'pixel-sky': 'linear-gradient(180deg, #6BCBFF 0%, #FFFFFF 55%, #FFD93D 100%)',
+      },
+      backgroundSize: {
+        'pattern': '24px 24px',
+        'pixel': '16px 16px',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-out',
+        'slide-up': 'slideUp 0.5s ease-out',
+        'slide-down': 'slideDown 0.3s ease-out',
+        'scale-in': 'scaleIn 0.2s ease-out',
+        'pulse-soft': 'pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'shimmer': 'shimmer 2s linear infinite',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideDown: {
+          '0%': { opacity: '0', transform: 'translateY(-10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        pulseSoft: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+      },
+      borderRadius: {
+        '4xl': '2rem',
+      },
+    },
+  },
+  plugins: [],
+}

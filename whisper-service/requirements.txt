@@ -1,0 +1,14 @@
+# Install in order - setuptools must come first
+setuptools>=69.0.0
+wheel
+
+# Core dependencies
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+pydantic==2.5.3
+
+# Whisper and audio
+openai-whisper
+yt-dlp
+
