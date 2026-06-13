@@ -1,36 +1,45 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import api from '../services/api'
 import toast from 'react-hot-toast'
+import api from '../services/api'
 import GenerationLoader from '../components/GenerationLoader'
 
-const Generate = () => {
-  const [videoUrl, setVideoUrl] = useState('')
+const VideoUploads = () => {
+  const [file, setFile] = useState(null)
   const [difficulty, setDifficulty] = useState('medium')
-  const [numItems, setNumItems] = useState(10)
+  const [numQuestions, setNumQuestions] = useState(10)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleFileChange = (event) => {
+    const nextFile = event.target.files?.[0] || null
+    setFile(nextFile)
+  }
 
-    if (!videoUrl.trim()) {
-      toast.error('Please enter a video URL')
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (!file) {
+      toast.error('Please choose a video file to upload')
       return
     }
+
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('difficulty', difficulty)
+    formData.append('numQuestions', String(numQuestions))
 
     setLoading(true)
 
     try {
-      const response = await api.post('/quiz/generate', {
-        videoUrl,
-        difficulty,
-        numQuestions: numItems
+      const response = await api.post('/videos/quiz', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       })
+
       toast.success('Quiz generated!')
       navigate(`/quiz/${response.data.quiz.id}`)
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to generate content')
+      toast.error(error.response?.data?.message || 'Failed to generate quiz')
     } finally {
       setLoading(false)
     }
@@ -42,31 +51,26 @@ const Generate = () => {
 
       <div className="max-w-2xl mx-auto px-4 py-5 animate-fade-in">
         <div className="text-center mb-5">
-          <h1 className="text-2xl font-bold text-slate-900">Youtube Quiz</h1>
-          <p className="text-slate-500 text-sm">Paste a YouTube video URL to create a quiz</p>
+          <h1 className="text-2xl font-bold text-slate-900">Video Uploads</h1>
+          <p className="text-slate-500 text-sm">
+            Upload a video to generate a quiz from its transcript
+          </p>
         </div>
 
         <div className="card-padded">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Video URL */}
             <div>
-              <label className="label">YouTube Video URL</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                </div>
-                <input
-                  type="url"
-                  value={videoUrl}
-                  onChange={(e) => setVideoUrl(e.target.value)}
-                  className="input pl-11"
-                  placeholder="https://www.youtube.com/watch?v=..."
-                  required
-                  disabled={loading}
-                />
-              </div>
+              <label className="label">Upload video file</label>
+              <input
+                type="file"
+                accept="video/*"
+                onChange={handleFileChange}
+                className="input"
+                disabled={loading}
+              />
+              <p className="text-xs text-slate-500 mt-2">
+                Upload a video file. We extract audio and generate a quiz from the transcript.
+              </p>
             </div>
 
             <div className="animate-slide-down">
@@ -94,20 +98,17 @@ const Generate = () => {
               </div>
             </div>
 
-            {/* Number of Items */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="label mb-0">
-                  Number of Questions
-                </label>
-                <span className="text-sm font-semibold text-primary-600 tabular-nums">{numItems}</span>
+                <label className="label mb-0">Number of Questions</label>
+                <span className="text-sm font-semibold text-primary-600 tabular-nums">{numQuestions}</span>
               </div>
               <input
                 type="range"
                 min="5"
                 max="20"
-                value={numItems}
-                onChange={(e) => setNumItems(parseInt(e.target.value))}
+                value={numQuestions}
+                onChange={(e) => setNumQuestions(parseInt(e.target.value))}
                 disabled={loading}
                 className="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-soft [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110"
               />
@@ -117,7 +118,6 @@ const Generate = () => {
               </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
@@ -144,4 +144,4 @@ const Generate = () => {
   )
 }
 
-export default Generate
+export default VideoUploads

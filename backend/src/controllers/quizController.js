@@ -1,5 +1,5 @@
 import { Quiz, Score } from '../models/index.js';
-import { fetchYouTubeTranscript, generateQuiz, generateTitle, formatTimestampLink } from '../services/index.js';
+import { fetchYouTubeTranscript, generateQuiz, generateTitle } from '../services/index.js';
 
 export const generateQuizFromVideo = async (req, res, next) => {
   try {
@@ -159,8 +159,7 @@ export const submitQuiz = async (req, res, next) => {
         userAnswer: graded.userAnswer,
         correctAnswer: question.correctAnswer,
         isCorrect: graded.isCorrect,
-        explanation: question.explanation,
-        timestampLink: !graded.isCorrect ? formatTimestampLink(quiz.videoId, question.timestamp) : null
+        explanation: question.explanation
       };
     });
 

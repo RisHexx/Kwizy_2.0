@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.js';
 import quizRoutes from './routes/quiz.js';
 import flashcardRoutes from './routes/flashcard.js';
 import userRoutes from './routes/user.js';
+import videoRoutes from './routes/uploads.js';
 
 // Connect to database
 connectDB();
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/flashcards', flashcardRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/videos', videoRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

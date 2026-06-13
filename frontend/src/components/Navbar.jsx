@@ -38,7 +38,8 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <NavLink to="/dashboard">Dashboard</NavLink>
-                <NavLink to="/generate">Generate</NavLink>
+                <NavLink to="/youtube">YouTube</NavLink>
+                <NavLink to="/videos">Video Uploads</NavLink>
                 <NavLink to="/history">History</NavLink>
                 <NavLink to="/flashcards">Flashcards</NavLink>
 

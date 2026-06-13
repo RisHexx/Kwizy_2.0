@@ -1,3 +1,5 @@
+import fs from 'fs/promises';
+
 const WHISPER_SERVICE_URL = process.env.WHISPER_SERVICE_URL || 'http://localhost:8000';
 
 export const isWhisperAvailable = async () => {
@@ -53,6 +55,40 @@ export const transcribeWithLocalWhisper = async (videoUrl, videoId) => {
     }
   } catch (error) {
     console.error('Whisper service error:', error.message);
+    return {
+      success: false,
+      error: `Whisper service unavailable: ${error.message}`
+    };
+  }
+};
+
+export const transcribeUploadWithWhisper = async ({ filePath, fileName, mimeType }) => {
+  try {
+    const fileBuffer = await fs.readFile(filePath);
+    const form = new FormData();
+    form.append('file', new Blob([fileBuffer], { type: mimeType }), fileName);
+
+    const response = await fetch(`${WHISPER_SERVICE_URL}/transcribe-file`, {
+      method: 'POST',
+      body: form
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      return {
+        success: true,
+        transcript: data.transcript,
+        fullText: data.full_text,
+        source: 'whisper'
+      };
+    }
+
+    return {
+      success: false,
+      error: data.error || 'Transcription failed'
+    };
+  } catch (error) {
     return {
       success: false,
       error: `Whisper service unavailable: ${error.message}`

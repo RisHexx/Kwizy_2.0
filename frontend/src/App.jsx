@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Generate from './pages/Generate'
+import VideoUploads from './pages/Uploads'
 import Quiz from './pages/Quiz'
 import QuizResults from './pages/QuizResults'
 import QuizHistory from './pages/QuizHistory'
@@ -38,7 +39,8 @@ const App = () => {
         <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
         <Route path="/register" element={<Navigate to="/login" />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/generate" element={<ProtectedRoute><Generate /></ProtectedRoute>} />
+        <Route path="/youtube" element={<ProtectedRoute><Generate /></ProtectedRoute>} />
+        <Route path="/videos" element={<ProtectedRoute><VideoUploads /></ProtectedRoute>} />
         <Route path="/quiz/:id" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
         <Route path="/quiz/:id/results" element={<ProtectedRoute><QuizResults /></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><QuizHistory /></ProtectedRoute>} />

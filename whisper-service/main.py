@@ -2,7 +2,7 @@ import os
 import tempfile
 import shutil
 from pathlib import Path
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import whisper
@@ -183,6 +183,64 @@ async def transcribe_video(request: TranscribeRequest, background_tasks: Backgro
             success=False,
             error=str(e)
         )
+
+
+@app.post("/transcribe-file", response_model=TranscribeResponse)
+async def transcribe_upload(file: UploadFile = File(...), background_tasks: BackgroundTasks = None):
+    if not model:
+        raise HTTPException(status_code=503, detail="Whisper model not loaded yet")
+
+    temp_dir = tempfile.mkdtemp(prefix="kwizy_upload_")
+    suffix = Path(file.filename or "upload").suffix or ".mp4"
+    temp_path = os.path.join(temp_dir, f"upload{suffix}")
+
+    try:
+        logger.info("Saving uploaded file for transcription")
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        logger.info("Starting Whisper transcription on uploaded file")
+        result = transcribe_audio(temp_path)
+
+        segments = []
+        for segment in result.get("segments", []):
+            segments.append(TranscriptSegment(
+                text=segment["text"].strip(),
+                start=int(segment["start"]),
+                duration=int(segment["end"] - segment["start"])
+            ))
+
+        full_text = " ".join([s.text for s in segments])
+
+        if background_tasks:
+            background_tasks.add_task(cleanup_files, temp_path)
+            background_tasks.add_task(shutil.rmtree, temp_dir, ignore_errors=True)
+        else:
+            cleanup_files(temp_path)
+            shutil.rmtree(temp_dir, ignore_errors=True)
+
+        return TranscribeResponse(
+            success=True,
+            transcript=segments,
+            full_text=full_text,
+            source="whisper"
+        )
+
+    except Exception as e:
+        logger.error(f"Upload transcription error: {e}")
+        if background_tasks:
+            background_tasks.add_task(shutil.rmtree, temp_dir, ignore_errors=True)
+        else:
+            shutil.rmtree(temp_dir, ignore_errors=True)
+        return TranscribeResponse(
+            success=False,
+            error=str(e)
+        )
+    finally:
+        try:
+            await file.close()
+        except Exception:
+            pass
 
 
 @app.get("/models")

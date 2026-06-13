@@ -22,3 +22,8 @@ Thumbs.db
 # Build
 dist/
 build/
+
+# Uploads and caches
+uploads/
+storage/
+.cache/

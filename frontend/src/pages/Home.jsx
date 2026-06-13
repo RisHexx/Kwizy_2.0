@@ -24,13 +24,13 @@ const Home = () => {
             </h1>
 
             <p className="text-base sm:text-lg text-slate-700 max-w-xl mb-8 leading-relaxed">
-              Paste any YouTube video URL and let AI generate quizzes and flashcards.
+              Paste any YouTube video URL or upload an offline video and let AI generate quizzes and flashcards.
               Learn smarter with instant feedback and progress tracking.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                to={isAuthenticated ? "/generate" : "/login"}
+                to={isAuthenticated ? "/youtube" : "/login"}
                 className="btn btn-primary btn-lg"
               >
                 Get Started
@@ -115,7 +115,7 @@ const Home = () => {
               Everything You Need to Learn Better
             </h2>
             <p className="text-slate-600 max-w-xl mx-auto">
-              Powerful AI tools to transform any video content into effective study materials.
+              Powerful AI tools to transform YouTube links and offline videos into effective study materials.
             </p>
           </div>
 
@@ -128,7 +128,7 @@ const Home = () => {
               </div>
               <h3 className="text-lg font-semibold text-slate-900 mb-2">AI Quiz Generation</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Automatically create quizzes with multiple choice and true/false questions from any video.
+                Automatically create quizzes with multiple choice and true/false questions from any YouTube or offline video.
               </p>
             </div>
 
@@ -140,7 +140,7 @@ const Home = () => {
               </div>
               <h3 className="text-lg font-semibold text-slate-900 mb-2">Smart Flashcards</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Generate flashcards that extract key concepts for quick revision and memorization.
+                Generate flashcards that extract key concepts from online or offline videos for quick revision and memorization.
               </p>
             </div>
 
@@ -176,7 +176,7 @@ const Home = () => {
               </div>
               <h3 className="text-lg font-semibold text-slate-900 mb-2">Paste Video Link</h3>
               <p className="text-slate-600 text-sm">
-                Copy any YouTube video URL and paste it into Kwizy.
+                Copy any YouTube link or upload an offline video file into Kwizy.
               </p>
             </div>
 
@@ -186,7 +186,7 @@ const Home = () => {
               </div>
               <h3 className="text-lg font-semibold text-slate-900 mb-2">AI Generates Content</h3>
               <p className="text-slate-600 text-sm">
-                Our AI analyzes the video and creates quizzes or flashcards.
+                Our AI analyzes the video source and creates quizzes or flashcards.
               </p>
             </div>
 
@@ -210,7 +210,7 @@ const Home = () => {
             Ready to Learn Smarter?
           </h2>
           <p className="text-ink text-base sm:text-lg">
-            Start transforming videos into interactive learning materials today.
+            Start transforming YouTube and offline videos into interactive learning materials today.
           </p>
         </div>
       </section>

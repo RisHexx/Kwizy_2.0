@@ -55,7 +55,7 @@ const QuizHistory = () => {
           <h1 className="text-2xl font-bold text-slate-900">Quiz History</h1>
           <p className="text-slate-500 mt-1">Review all your quiz attempts and scores</p>
         </div>
-        <Link to="/generate" className="btn btn-primary">
+        <Link to="/youtube" className="btn btn-primary">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
@@ -74,7 +74,7 @@ const QuizHistory = () => {
           <p className="text-slate-500 mb-6 max-w-sm mx-auto">
             Generate and take a quiz to see your results here
           </p>
-          <Link to="/generate" className="btn btn-primary">
+          <Link to="/youtube" className="btn btn-primary">
             Generate a Quiz
           </Link>
         </div>

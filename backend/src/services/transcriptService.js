@@ -112,10 +112,6 @@ export const fetchYouTubeTranscript = async (videoUrl) => {
   };
 };
 
-export const formatTimestampLink = (videoId, seconds) => {
-  return `https://youtube.com/watch?v=${videoId}&t=${seconds}s`;
-};
-
 export const formatTimestamp = (seconds) => {
   const hrs = Math.floor(seconds / 3600);
   const mins = Math.floor((seconds % 3600) / 60);

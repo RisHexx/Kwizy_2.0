@@ -119,7 +119,7 @@ const ScoreDetails = () => {
         <Link to={`/quiz/${quiz.id}`} className="btn btn-primary">
           Retake Quiz
         </Link>
-        <Link to="/generate" className="btn btn-secondary">
+        <Link to="/youtube" className="btn btn-secondary">
           Generate New Quiz
         </Link>
       </div>
@@ -258,19 +258,6 @@ const ScoreDetails = () => {
                 </div>
               )}
 
-              {!result.isCorrect && result.timestampLink && (
-                <a
-                  href={result.timestampLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-4 py-2 rounded-lg transition-all"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                  </svg>
-                  Watch in video
-                </a>
-              )}
             </div>
           </div>
         ))}

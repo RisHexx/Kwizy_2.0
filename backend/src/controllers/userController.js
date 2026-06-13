@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { User, Quiz, FlashcardSet, Score } from '../models/index.js';
 
 export const getProfile = async (req, res, next) => {
@@ -105,10 +104,6 @@ export const getScoreDetails = async (req, res, next) => {
     // Build results with full question details
     const results = score.quiz.questions.map((question, index) => {
       const answer = score.answers.find(a => a.questionIndex === index) || {};
-      const timestampLink = !answer.isCorrect && question.timestamp
-        ? `https://youtube.com/watch?v=${score.quiz.videoId}&t=${Math.floor(question.timestamp)}s`
-        : null;
-
       return {
         question: question.question,
         type: question.type,
@@ -116,8 +111,7 @@ export const getScoreDetails = async (req, res, next) => {
         userAnswer: answer.userAnswer || '',
         correctAnswer: question.correctAnswer,
         isCorrect: answer.isCorrect || false,
-        explanation: question.explanation,
-        timestampLink
+        explanation: question.explanation
       };
     });
 
@@ -145,29 +139,10 @@ export const getScoreDetails = async (req, res, next) => {
 
 export const getDashboard = async (req, res, next) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.user.id);
-
     const recentQuizzes = await Quiz.find({ user: req.user.id })
-      .select('title thumbnail videoId difficulty createdAt')
+      .select('title thumbnail videoId difficulty sourceType createdAt')
       .sort('-createdAt')
       .limit(5);
-
-    // Use aggregation to get cardCount without loading all cards
-    const recentFlashcards = await FlashcardSet.aggregate([
-      { $match: { user: userId } },
-      { $sort: { createdAt: -1 } },
-      { $limit: 6 },
-      {
-        $project: {
-          _id: 1,
-          title: 1,
-          thumbnail: 1,
-          videoId: 1,
-          createdAt: 1,
-          cardCount: { $size: '$cards' }
-        }
-      }
-    ]);
 
     const recentScores = await Score.find({ user: req.user.id })
       .populate('quiz', 'title thumbnail')
@@ -195,7 +170,6 @@ export const getDashboard = async (req, res, next) => {
         averageScore
       },
       recentQuizzes,
-      recentFlashcards,
       recentScores
     });
   } catch (error) {

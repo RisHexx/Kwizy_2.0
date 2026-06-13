@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import api from '../services/api'
 import toast from 'react-hot-toast'
+import GenerationLoader from '../components/GenerationLoader'
 
 const Flashcards = () => {
   const [flashcardSets, setFlashcardSets] = useState([])
   const [loading, setLoading] = useState(true)
+  const [generating, setGenerating] = useState(false)
+  const [videoUrl, setVideoUrl] = useState('')
+  const [numCards, setNumCards] = useState(10)
   const [deleteModal, setDeleteModal] = useState({ open: false, id: null, title: '' })
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchFlashcardSets()
@@ -39,6 +44,34 @@ const Flashcards = () => {
     setDeleteModal({ open: true, id, title })
   }
 
+  const handleGenerate = async (event) => {
+    event.preventDefault()
+
+    if (!videoUrl.trim()) {
+      toast.error('Please enter a video URL')
+      return
+    }
+
+    setGenerating(true)
+
+    try {
+      const response = await api.post('/flashcards/generate', {
+        videoUrl,
+        numCards
+      })
+
+      toast.success('Flashcards generated!')
+      setVideoUrl('')
+      setNumCards(10)
+      fetchFlashcardSets()
+      navigate(`/flashcards/${response.data.flashcardSet.id}`)
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to generate flashcards')
+    } finally {
+      setGenerating(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
@@ -49,17 +82,57 @@ const Flashcards = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+      {generating && <GenerationLoader mode="flashcards" />}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Flashcards</h1>
-          <p className="text-slate-500 mt-1">Review and study your flashcard sets</p>
+          <p className="text-slate-500 mt-1">Generate and study your flashcard sets</p>
         </div>
-        <Link to="/generate" className="btn btn-primary">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Create New
-        </Link>
+      </div>
+
+      <div className="card-padded mb-6">
+        <h2 className="text-lg font-semibold text-slate-900 mb-3">Create Flashcards</h2>
+        <form onSubmit={handleGenerate} className="space-y-4">
+          <div>
+            <label className="label">YouTube Video URL</label>
+            <input
+              type="url"
+              value={videoUrl}
+              onChange={(event) => setVideoUrl(event.target.value)}
+              className="input"
+              placeholder="https://www.youtube.com/watch?v=..."
+              required
+              disabled={generating}
+            />
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="label mb-0">Number of Cards</label>
+              <span className="text-sm font-semibold text-primary-600 tabular-nums">{numCards}</span>
+            </div>
+            <input
+              type="range"
+              min="5"
+              max="20"
+              value={numCards}
+              onChange={(event) => setNumCards(parseInt(event.target.value))}
+              disabled={generating}
+              className="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-soft [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110"
+            />
+            <div className="flex justify-between text-xs text-slate-400 mt-1.5">
+              <span>5</span>
+              <span>20</span>
+            </div>
+          </div>
+          <button
+            type="submit"
+            disabled={generating}
+            className="btn btn-primary"
+          >
+            {generating ? 'Generating...' : 'Generate Flashcards'}
+          </button>
+        </form>
       </div>
 
       {flashcardSets.length === 0 ? (
@@ -73,9 +146,6 @@ const Flashcards = () => {
           <p className="text-slate-500 mb-6 max-w-sm mx-auto">
             Generate flashcards from a YouTube video to get started
           </p>
-          <Link to="/generate" className="btn btn-primary">
-            Generate Flashcards
-          </Link>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">

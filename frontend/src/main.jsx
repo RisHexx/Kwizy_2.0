@@ -25,7 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 borderRadius: '4px',
                 border: '2px solid #1B1A17',
                 boxShadow: 'none',
-                fontFamily: '"Pixelify Sans", system-ui, sans-serif'
+                fontFamily: '"Poppins", system-ui, sans-serif'
               }
             }}
           />

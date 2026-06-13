@@ -195,3 +195,108 @@ export const generateTitle = async (transcript) => {
     return 'Video Quiz';
   }
 };
+
+export const generateQuizFromText = async (content, difficulty = 'medium', numQuestions = 10) => {
+  const difficultyPrompts = {
+    easy: 'Generate straightforward questions that test basic understanding and recall of the main concepts.',
+    medium: 'Generate questions that test understanding and require some analysis of the content.',
+    hard: 'Generate challenging questions that require deep understanding, critical thinking, and inference.'
+  };
+
+  const prompt = `You are an educational quiz generator. Based on the following document content, generate exactly ${numQuestions} quiz questions.
+IMPORTANT: All questions, options, explanations, and text MUST be in English, even if the document is in another language.
+
+${difficultyPrompts[difficulty]}
+
+Mix of question types:
+- 70% Multiple Choice Questions (MCQ) with 4 options (A, B, C, D)
+- 30% True/False questions
+
+For each question, provide:
+1. The question text
+2. The question type (mcq or true_false)
+3. Options (for MCQ: array of 4 options; for true/false: ["True", "False"])
+4. The correct answer (the actual text of the correct option)
+5. A brief explanation of why this is correct
+6. An approximate timestamp (in seconds) if the content references time-based media, otherwise use 0
+
+IMPORTANT: Return ONLY valid JSON in this exact format, no other text:
+{
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "What is...?",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correctAnswer": "Option A",
+      "explanation": "This is correct because...",
+      "timestamp": 0
+    }
+  ]
+}
+
+Document Content:
+${content}
+
+REMINDER: You MUST write ALL output in English. Respond with valid JSON only.`;
+
+  try {
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an expert educational content creator. You MUST generate all content in English, regardless of the language of the source. Always respond with valid JSON only.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 4096
+    });
+
+    const responseText = completion.choices[0]?.message?.content || '';
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Failed to parse quiz response');
+    }
+
+    const quizData = JSON.parse(sanitizeJsonString(jsonMatch[0]));
+    return {
+      success: true,
+      questions: quizData.questions
+    };
+  } catch (error) {
+    console.error('Groq quiz generation error:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};
+
+export const generateTitleFromText = async (content, fallbackName = 'Document Quiz') => {
+  try {
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        {
+          role: 'system',
+          content: 'You MUST generate a short, descriptive title in English only (max 60 characters) for a quiz based on this document content. Return only the title text, nothing else.'
+        },
+        {
+          role: 'user',
+          content: content.substring(0, 2000) + '\n\nREMINDER: Generate the title in English only.'
+        }
+      ],
+      temperature: 0.5,
+      max_tokens: 100
+    });
+
+    return completion.choices[0]?.message?.content?.trim() || fallbackName;
+  } catch (error) {
+    console.error('Title generation error:', error.message);
+    return fallbackName;
+  }
+};
