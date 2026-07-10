@@ -28,13 +28,22 @@ const flashcardSetSchema = new mongoose.Schema({
   },
   videoUrl: {
     type: String,
-    required: true
+    default: null
   },
   videoId: {
     type: String,
-    required: true
+    default: null
   },
   thumbnail: {
+    type: String,
+    default: null
+  },
+  sourceType: {
+    type: String,
+    enum: ['youtube', 'video_upload'],
+    default: 'youtube'
+  },
+  sourceName: {
     type: String,
     default: null
   },

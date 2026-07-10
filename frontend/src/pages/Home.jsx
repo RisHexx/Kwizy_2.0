@@ -147,12 +147,12 @@ const Home = () => {
             <div className="text-center border-2 border-ink rounded-sm p-6 bg-white">
               <div className="w-14 h-14 bg-primary-200 rounded-sm border-2 border-ink flex items-center justify-center mx-auto mb-5">
                 <svg className="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h3m-3-8h6m2 10l2 2 4-4M7 3h10l4 4v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Video Timestamps</h3>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">Quiz Explanations & Progress</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Jump directly to the video moment where each concept is explained when you need review.
+                See clear explanations for each quiz answer and monitor your learning progress over time.
               </p>
             </div>
           </div>

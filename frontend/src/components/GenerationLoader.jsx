@@ -12,7 +12,7 @@ const GenerationLoader = ({ mode }) => {
         </svg>
       ),
       text: "Fetching video content",
-      subtext: "Connecting to YouTube"
+      subtext: "Connecting to your source"
     },
     {
       icon: (

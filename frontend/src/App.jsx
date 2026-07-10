@@ -12,6 +12,7 @@ import QuizHistory from './pages/QuizHistory'
 import ScoreDetails from './pages/ScoreDetails'
 import Flashcards from './pages/Flashcards'
 import FlashcardStudy from './pages/FlashcardStudy'
+import GenerateFlashcards from './pages/GenerateFlashcards'
 import Profile from './pages/Profile'
 
 const ProtectedRoute = ({ children }) => {
@@ -46,6 +47,7 @@ const App = () => {
         <Route path="/history" element={<ProtectedRoute><QuizHistory /></ProtectedRoute>} />
         <Route path="/history/:id" element={<ProtectedRoute><ScoreDetails /></ProtectedRoute>} />
         <Route path="/flashcards" element={<ProtectedRoute><Flashcards /></ProtectedRoute>} />
+        <Route path="/flashcards/generate" element={<ProtectedRoute><GenerateFlashcards /></ProtectedRoute>} />
         <Route path="/flashcards/:id" element={<ProtectedRoute><FlashcardStudy /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       </Routes>
